@@ -1,0 +1,25 @@
+{
+  "name": "employee-management-system",
+  "version": "1.0.0",
+  "description": "Employee management system I want to be able to view and manage the departments, roles, and employees in my company",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asadrauf/employee-management-system.git"
+  },
+  "author": "Asad Rauf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asadrauf/employee-management-system/issues"
+  },
+  "homepage": "https://github.com/asadrauf/employee-management-system#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.1.0",
+    "mysql": "^2.18.1"
+  }
+}
