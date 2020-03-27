@@ -119,7 +119,7 @@ class RDBMS {
   }
 
   /* Asynchronous function which will return an array  that will hold
-  emp first name and last name */
+     emp first name and last name */
     async function getEmployeeNames() {
     let query = "SELECT * FROM employee";
     const emp = await conn.query(query);
@@ -131,7 +131,7 @@ class RDBMS {
   }
 
   /* Asynchronous function to view all the possible roles
-  that exist in our database */
+     that exist in our database */
     async function viewAllRoles() {
     console.log("");
     let query = "SELECT * FROM role";
@@ -141,13 +141,15 @@ class RDBMS {
   }
 
   /* Asynchronous function to view all the possible departments
-  that exist in our database */
+     that exist in our database */
     async function viewAllDepartments() {
     let query = "SELECT * FROM department";
     const data = await conn.query(query);
     console.table(data);
   }
 
+   /* Asynchronous function to view all the existing employees
+      that exist in our database */
     async function viewAllEmployees() {
     console.log("");
     let query = "SELECT * FROM employee";
@@ -155,5 +157,84 @@ class RDBMS {
     console.table(data);
   }
 
+   /* Asynchronous function which contains a JOIN query that will display employee data 
+      vs current department  */
+    async function viewAllEmployeesByDepartment() {
+    let query = "SELECT first_name as FirstName, last_name as LastName, department.name as Department FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);";
+    const data = await conn.query(query);
+    console.table(data);
+  }
 
-  
+   /* Asynchronous helper function each time we want to update the record
+      this will get us emp list with first and last name  */
+    function getFirstAndLastName( fullName ) {
+    let employee = fullName.split(" ");
+    if(employee.length == 2) {
+        return employee;
+    }
+
+    const last_name = employee[employee.length-1];
+    let first_name = " ";
+    for(let i=0; i<employee.length-1; i++) {
+        first_name = first_name + employee[i] + " ";
+    }
+    return [first_name.trim(), last_name];
+  }
+
+  /* Asynchronous function in order to update employee role
+     we need employee id and employee full name so we can pass that into params */
+    async function updateEmployeeRole(employeeInfo) {
+    const roleId = await getRoleId(employeeInfo.role);
+    const employee = getFirstAndLastName(employeeInfo.employeeName);
+    let query = 'UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?';
+    let params=[roleId, employee[0], employee[1]];
+    const rows = await conn.query(query, params);
+    console.log(`Updated employee ${employee[0]} ${employee[1]} with role ${employeeInfo.role}`);
+  }
+
+  /*Asynchronous function in order to add employee we will get 
+    emp data like naame , manager name etc to insert into database */
+    async function addEmployee(employeeInfo) {
+    let roleId = await getRoleId(employeeInfo.role);
+    let managerId = await getEmployeeId(employeeInfo.manager);
+    let query = "INSERT into employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
+    let params = [employeeInfo.first_name, employeeInfo.last_name, roleId, managerId];
+    const rows = await conn.query(query, params);
+    console.log(chalk.greenBright(`Added employee ${employeeInfo.first_name} ${employeeInfo.last_name}.`));
+  }
+
+  /*Asynchronous function deleting employee from database where
+  input first and last name matched with database entry*/
+    async function removeEmployee(employeeInfo) {
+    const employeeName = getFirstAndLastName(employeeInfo.employeeName);
+    let query = "DELETE from employee WHERE first_name=? AND last_name=?";
+    let params = [employeeName[0], employeeName[1]];
+    const rows = await conn.query(query, params);
+    console.log(chalk.redBright(`Employee removed: ${employeeName[0]} ${employeeName[1]}`));
+  }
+
+  /* Asynchronous function to add a new department in our
+  department table */
+    async function addDepartment(departmentInfo) {
+    const departmentName = departmentInfo.departmentName;
+    let query = 'INSERT into department (name) VALUES (?)';
+    let params = [departmentName];
+    const rows = await conn.query(query, params);
+    console.log(chalk.yellow(`Added department named ${departmentName}`));
+  }
+
+   /* Asynchronous function to add a new role in our
+  role table */
+    async function addRole(roleInfo) {
+    const departmentId = await getDepartmentId(roleInfo.departmentName);
+    const salary = roleInfo.salary;
+    const title = roleInfo.roleName;
+    let query = 'INSERT into role (title, salary, department_id) VALUES (?,?,?)';
+    let params = [title, salary, departmentId];
+    const rows = await conn.query(query, params);
+    console.log(chalk.greenBright(`Added role ${title}`));
+  }
+
+/* 
+Done here integrating with the mysql database
+*/
