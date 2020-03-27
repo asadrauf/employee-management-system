@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS cms;
+DROP DATABASE IF EXISTS emp_manage_sysDB;
 --creating our database
 CREATE database emp_manage_sysDB;
 

@@ -25,7 +25,7 @@ values ("Metrology Tech", 40000, 3);
 insert into role (title, salary, department_id) 
 values ("Process Tech", 40000, 3);
 insert into role (title, salary, department_id) 
-values ("Counselor", 60000, 4);
+values ("Compliance", 60000, 4);
 
 --below we are inserting data into our employee table
 insert into employee (first_name, last_name, role_id, manager_id) 
