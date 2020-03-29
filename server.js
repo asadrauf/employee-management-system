@@ -186,7 +186,7 @@ class RDBMS {
 
             case 'View all managers': {
               console.log(
-                chalk.greenBright(
+                chalk.yellow(
                   figlet.textSync('Managers', { font:'small', horizontalLayout: 'full' })
                 )
               );
@@ -195,6 +195,11 @@ class RDBMS {
           }
 
           case 'View all Department Job Titles with salaries': {
+            console.log(
+              chalk.greenBright(
+                figlet.textSync('Dept with Salaries', { font:'small', horizontalLayout: 'full' })
+              )
+            );
             await viewDepartmentBySalary();
             break;
         }
