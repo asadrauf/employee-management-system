@@ -49,13 +49,44 @@ class RDBMS {
     database: "emp_manage_sysDB"
   });
 
+  //Creating our Application logo below
+  console.log(
+    chalk.bgBlackBright(
+      figlet.textSync('EM System', { horizontalLayout: 'full' })
+    )
+  );
+
+  //main prompt for the user to interact with the application
+  async function mainPrompt() {
+    return inquirer
+        .prompt ([
+            {
+                type: "list",
+                message: "Employee Management System",
+                name: "action",
+                choices: [
+                  "Choose to Add department",
+                  "Choose to Add employee",
+                  "Choose to Add role",
+                  "Choose to Remove employee record",
+                  "Choose to Update employee role",
+                  "View all departments Info",
+                  "View all employees Info",
+                  "View all employees by department",
+                  "View all roles Data",
+                  "Exit"
+                ]
+            }
+        ])
+  }
+
  
 /*
   Start of calls to the RDBMS 
 */
 
 /*Asynchronous function that will give us the list of managers each time we add an employee so we can 
-  an manager to every new employee that we are pushing into an return array*/
+  assign manager to every new employee that we are pushing into an return array*/
     async function getManagerNames() {
     let query = "SELECT * FROM employee WHERE manager_id IS NULL";
     const empTable = await conn.query(query);
@@ -238,31 +269,6 @@ class RDBMS {
 /* 
 Done here integrating with the mysql database
 */
-console.log(
-  chalk.bgBlackBright(
-    figlet.textSync('EM System', { horizontalLayout: 'full' })
-  )
-);
-async function mainPrompt() {
-  return inquirer
-      .prompt ([
-          {
-              type: "list",
-              message: "Employee Management System",
-              name: "action",
-              choices: [
-                "Choose to Add department",
-                "Choose to Add employee",
-                "Choose to Add role",
-                "Choose to Remove employee record",
-                "Choose to Update employee role",
-                "View all departments Info",
-                "View all employees Info",
-                "View all employees by department",
-                "View all roles Data",
-                "Exit"
-              ]
-          }
-      ])
-}
+
+
 
