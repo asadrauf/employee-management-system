@@ -238,3 +238,31 @@ class RDBMS {
 /* 
 Done here integrating with the mysql database
 */
+console.log(
+  chalk.bgBlackBright(
+    figlet.textSync('EM System', { horizontalLayout: 'full' })
+  )
+);
+async function mainPrompt() {
+  return inquirer
+      .prompt ([
+          {
+              type: "list",
+              message: "Employee Management System",
+              name: "action",
+              choices: [
+                "Choose to Add department",
+                "Choose to Add employee",
+                "Choose to Add role",
+                "Choose to Remove employee record",
+                "Choose to Update employee role",
+                "View all departments Info",
+                "View all employees Info",
+                "View all employees by department",
+                "View all roles Data",
+                "Exit"
+              ]
+          }
+      ])
+}
+
