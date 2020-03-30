@@ -251,7 +251,7 @@ class RDBMS {
         case 'View all employee with salaries': {
           console.log(
             chalk.greenBright(
-              figlet.textSync('Employees with Salaries', { font:'small', horizontalLayout: 'full' })
+              figlet.textSync('Employees Salary', { font:'small', horizontalLayout: 'full' })
             )
           );
           const spinner = ora('Fetching Employee Salary Info').start();
