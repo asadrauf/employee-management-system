@@ -79,6 +79,8 @@ class RDBMS {
                   "View all Department Job Titles with salaries",
                   "View all employee with salaries",
                   "View all non-managerial employees only",
+                  "View total number of employees",
+                  "View Employee Job Title",
                   "View Monthly Budget",
                   "Exit"
                 ]
@@ -275,6 +277,32 @@ class RDBMS {
         break;
     }
 
+    case 'View total number of employees': {
+      console.log(
+        chalk.greenBright(
+          figlet.textSync('Total Employees', { font:'small', horizontalLayout: 'full' })
+        )
+      );
+      const spinner = ora('Fetching total number of employees').start();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      spinner.stop();
+      await viewTotalEmp();
+      break;
+  }
+
+  case 'View Employee Job Title': {
+    console.log(
+      chalk.greenBright(
+        figlet.textSync('Employees Designation', { font:'small', horizontalLayout: 'full' })
+      )
+    );
+    const spinner = ora('Fetching Information').start();
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    spinner.stop();
+    await viewEmpTitle();
+    break;
+}
+
       case 'View Monthly Budget': {
         console.log(
           chalk.greenBright(
@@ -375,8 +403,8 @@ class RDBMS {
     return employeeNames;
   }
 
-  /* Asynchronous function to view all the possible roles
-     that exist in our database */
+  /*Asynchronous function to view all the possible roles
+    that exist in our database */
     async function viewAllRoles() {
     console.log("");
     let query = "SELECT * FROM role";
@@ -384,6 +412,26 @@ class RDBMS {
     console.table(data);
     return data;
   }
+
+   /*Asynchronous function to view all the possible roles
+     that exist in our database */
+     async function viewTotalEmp() {
+      console.log("");
+      let query = "select count(employee.id) as total_employee from employee order by total_employee";
+      const data = await conn.query(query);
+      console.table(data);
+      return data;
+    }
+
+    /*Asynchronous function to view all the possible roles
+     that exist in our database */
+     async function viewEmpTitle() {
+      console.log("");
+      let query = "select first_name, title from employee inner join role ON employee.role_id = role.id";
+      const data = await conn.query(query);
+      console.table(data);
+      return data;
+    }
 
   /* Asynchronous fuunction that will display all the managers names */
     async function viewAllManagers() {
@@ -432,9 +480,9 @@ class RDBMS {
   /* Asynchronous function to view the total company utilized budget per month
      that exist in our database */
      async function viewMonthlyBudget() {
-      let query = "SELECT sum(salary) as Monthly_Budget from role;";
-      const data = await conn.query(query);
-      console.table(data);
+     let query = "SELECT role_id as Company, sum(salary) as Monthly_Budget from employee Inner Join role ON (role.id=employee.role_id)";
+     const data = await conn.query(query);
+     console.table(data);
     }
 
    /* Asynchronous function to view all the existing employees
