@@ -78,6 +78,7 @@ class RDBMS {
                   "View all managers",
                   "View all Department Job Titles with salaries",
                   "View all employee with salaries",
+                  "View all non-managerial employees only",
                   "View Monthly Budget",
                   "Exit"
                 ]
@@ -261,6 +262,19 @@ class RDBMS {
           break;
       }
 
+      case 'View all non-managerial employees only': {
+        console.log(
+          chalk.greenBright(
+            figlet.textSync('Non-managerial', { font:'small', horizontalLayout: 'full' })
+          )
+        );
+        const spinner = ora('Fetching non managerial employees data').start();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        spinner.stop();
+        await viewNonManagerialEmp();
+        break;
+    }
+
       case 'View Monthly Budget': {
         console.log(
           chalk.greenBright(
@@ -372,9 +386,18 @@ class RDBMS {
   }
 
   /* Asynchronous fuunction that will display all the managers names */
-  async function viewAllManagers() {
+    async function viewAllManagers() {
     console.log("");
     let query = "SELECT * FROM employee where manager_id IS NULL";
+    const data = await conn.query(query);
+    console.table(data);
+    return data;
+  }
+
+  /* Asynchronous fuunction that will display all non-managerial employee list */
+    async function viewNonManagerialEmp() {
+    console.log("");
+    let query = "SELECT e.first_name, e.last_name from employee e Inner Join role r ON (e.manager_id = r.id)";
     const data = await conn.query(query);
     console.table(data);
     return data;
