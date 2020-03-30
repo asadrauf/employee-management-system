@@ -2,7 +2,7 @@ const inquirer = require("inquirer");
 const chalk = require("chalk");
 const mysql = require("mysql");
 const figlet = require('figlet');
-
+const ora = require('ora');
 /* RDMS means Relation DataBase Management System
    Below is the wrapper class for my sql client. 
    The constructor simply creates a new MySQL connection with the given configuration.
@@ -58,6 +58,7 @@ class RDBMS {
 
   //main prompt for the user to interact with the application
   async function mainPrompt() {
+    
     return inquirer
         .prompt ([
             {
@@ -77,13 +78,14 @@ class RDBMS {
                   "View all managers",
                   "View all Department Job Titles with salaries",
                   "View all employee with salaries",
+                  "View Monthly Budget",
                   "Exit"
                 ]
             }
         ])
   }
 
-  //Calling our main asynch function based on user selected answer
+  //Calling our main asynch function for user to choose what user want to do
   main();
   async function main() {
     let exitLoop = false;
@@ -97,6 +99,10 @@ class RDBMS {
                   figlet.textSync('New Dept Data', { font:'small', horizontalLayout: 'full' })
                 )
               );
+                //invoking a ora module to see the loading indicator
+                const spinner = ora().start();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                spinner.stop();
                 const newDepartmentName = await getDepartmentInfo();
                 await addDepartment(newDepartmentName);
                 break;
@@ -108,6 +114,10 @@ class RDBMS {
                   figlet.textSync('Add Employee', { font:'small', horizontalLayout: 'full' })
                 )
               );
+                //invoking a ora module to see the loading indicator
+                const spinner = ora().start();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                spinner.stop();
                 const newEmployee = await getAddEmployeeInfo();
                 console.log("add an employee");
                 console.log(newEmployee);
@@ -121,6 +131,10 @@ class RDBMS {
                   figlet.textSync('Adding Role', { font:'small', horizontalLayout: 'full' })
                 )
               );
+                //invoking a ora module to see the loading indicator
+                const spinner = ora().start();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                spinner.stop();
                 const newRole = await getRoleInfo();
                 console.log("add a role");
                 await addRole(newRole);
@@ -133,6 +147,10 @@ class RDBMS {
                   figlet.textSync('Removing Data', { font:'small', horizontalLayout: 'full' })
                 )
               );
+                //invoking a ora module to see the loading indicator
+                const spinner = ora().start();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                spinner.stop();
                 const employee = await getRemoveEmployeeInfo();
                 await removeEmployee(employee);
                 break;
@@ -144,6 +162,9 @@ class RDBMS {
                   figlet.textSync('Update role', { font:'small', horizontalLayout: 'full' })
                 )
               );
+                const spinner = ora().start();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                spinner.stop();
                 const employee = await getUpdateEmployeeRoleInfo();
                 await updateEmployeeRole(employee);
                 break;
@@ -155,8 +176,11 @@ class RDBMS {
                   figlet.textSync('Departments', { font:'small', horizontalLayout: 'full' })
                 )
               );
-                await viewAllDepartments();
-                break;
+              const spinner = ora('Fetching Department Info').start();
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              spinner.stop();
+              await viewAllDepartments();
+              break;
             }
   
             case 'View all employees Info': {
@@ -165,13 +189,24 @@ class RDBMS {
                   figlet.textSync('Employees', { font:'small', horizontalLayout: 'full' })
                 )
               );
-                await viewAllEmployees();
-                break;
+              const spinner = ora('Fetching Employee Info').start();
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              spinner.stop();
+              await viewAllEmployees();
+              break;
             }
   
             case 'View all employees by department': {
-                await viewAllEmployeesByDepartment();
-                break;
+              console.log(
+                chalk.yellowBright(
+                  figlet.textSync('Employee Department', { font:'small', horizontalLayout: 'full' })
+                )
+              );
+              const spinner = ora('Fetching Employee Department Data').start();
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              spinner.stop();
+              await viewAllEmployeesByDepartment();
+              break;
             }
   
             case 'View all roles data': {
@@ -180,8 +215,11 @@ class RDBMS {
                   figlet.textSync('Roles', { font:'small', horizontalLayout: 'full' })
                 )
               );
-                await viewAllRoles();
-                break;
+              const spinner = ora('Fetching Roles Info').start();
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              spinner.stop();
+              await viewAllRoles();
+              break;
             }
 
             case 'View all managers': {
@@ -190,6 +228,9 @@ class RDBMS {
                   figlet.textSync('Managers', { font:'small', horizontalLayout: 'full' })
                 )
               );
+              const spinner = ora('Fetching Manager Names').start();
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              spinner.stop();
               await viewAllManagers();
               break;
           }
@@ -200,6 +241,9 @@ class RDBMS {
                 figlet.textSync('Dept with Salaries', { font:'small', horizontalLayout: 'full' })
               )
             );
+            const spinner = ora('Fetching Data').start();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            spinner.stop();
             await viewDepartmentBySalary();
             break;
         }
@@ -210,9 +254,25 @@ class RDBMS {
               figlet.textSync('Employees with Salaries', { font:'small', horizontalLayout: 'full' })
             )
           );
+          const spinner = ora('Fetching Employee Salary Info').start();
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          spinner.stop();
           await viewAllEmployeeBySalaries();
           break;
       }
+
+      case 'View Monthly Budget': {
+        console.log(
+          chalk.greenBright(
+            figlet.textSync('Budget', { font:'small', horizontalLayout: 'full' })
+          )
+        );
+        const spinner = ora('Fetching Monthly Budget').start();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        spinner.stop();
+        await viewMonthlyBudget();
+        break;
+    }
   
             case 'Exit': {
                 process.exit(0);
@@ -346,6 +406,14 @@ class RDBMS {
     console.table(data);
   }
 
+  /* Asynchronous function to view the total company utilized budget per month
+     that exist in our database */
+     async function viewMonthlyBudget() {
+      let query = "SELECT sum(salary) as Monthly_Budget from role;";
+      const data = await conn.query(query);
+      console.table(data);
+    }
+
    /* Asynchronous function to view all the existing employees
       that exist in our database */
     async function viewAllEmployees() {
@@ -381,14 +449,14 @@ class RDBMS {
 
   /* Asynchronous function in order to update employee role
      we need employee id and employee full name so we can pass that into params */
-    async function updateEmployeeRole(employeeInfo) {
-    const roleId = await getRoleId(employeeInfo.role);
-    const employee = getFirstAndLastName(employeeInfo.employeeName);
-    let query = 'UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?';
-    let params=[roleId, employee[0], employee[1]];
-    const rows = await conn.query(query, params);
-    console.log(`Updated employee ${employee[0]} ${employee[1]} with role ${employeeInfo.role}`);
-  }
+     async function updateEmployeeRole(employeeInfo) {
+      const roleId = await getRoleId(employeeInfo.role);
+      const employee = getFirstAndLastName(employeeInfo.employeeName);
+      let query = 'UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?';
+      let params=[roleId, employee[0], employee[1]];
+      const rows = await conn.query(query, params);
+      console.log(chalk.yellow(`Updated employee ${employee[0]} ${employee[1]} with role ${employeeInfo.role}`));
+    }
 
   /*Asynchronous function in order to add employee we will get 
     emp data like naame , manager name etc to insert into database */
@@ -552,7 +620,6 @@ async function getUpdateEmployeeRoleInfo() {
       ])
 
 }
-
 
 // Close your database connection when Node exits
 process.on("exit", async function(code) {

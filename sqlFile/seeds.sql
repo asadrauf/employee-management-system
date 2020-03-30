@@ -55,3 +55,7 @@ values ("Melissa", "Sperry", 7, 5);
 
 insert into employee (first_name, last_name, role_id, manager_id) 
 values ("Shakira", "Smith", 9, null);
+insert into employee (first_name, last_name, role_id, manager_id) 
+values ("Shakira", "Smith", 8, 9);
+insert into employee (first_name, last_name, role_id, manager_id) 
+values ("Shakira", "Smith", 8, 9);
