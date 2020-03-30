@@ -1,4 +1,4 @@
-          
+  ![Farmers Market Finder Demo](giffy.gif)        
 ### employee-management-system ![Maintained](https://img.shields.io/badge/ems-yellowgreen) ![Maintained](https://img.shields.io/badge/UNC-bootCamp-blue)
 ![Project Version](https://img.shields.io/badge/Version-version1.1-blue)  ![Documentation](https://img.shields.io/badge/Documentation-Yes-yellowgreen) ![Maintained](https://img.shields.io/badge/Maintained-Yes-yellowgreen)  ![License](https://img.shields.io/badge/License-MIT-green)
 
